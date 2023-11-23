@@ -73,6 +73,21 @@ pipeline{
                }
             }
         }
+        stage('Push artifacts into artifactory') {
+            steps {
+              rtUpload (
+                serverId: 'my-artifactory',
+                spec: '''{
+                      "files": [
+                        {
+                          "pattern": "*.jar",
+                          "target": "example-repo-local/build-files/"
+                        }
+                    ]
+                }'''
+              )
+          }
+        }
         stage('Docker Image Build'){
          when { expression {  params.action == 'create' } }
             steps{
